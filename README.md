@@ -1,7 +1,6 @@
 # BuildGoInChroot
 
-When you need to build in different ubuntu version, you can use chroot. I made it for the usecase.
-It makes chroot environment and a builds debian file.
+When you need to build golang app. in different ubuntu version, you can use chroot. I made it for the usecase. It makes chroot environment and a builds debian file.
 
 # Required
 ```
