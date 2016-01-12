@@ -24,12 +24,16 @@ echo "APP_VERSION: $APP_VERSION"
 export DEBIAN_FRONTEND=noninteractive 
 
 echo "=[apt-get update]====================================================================================="
+add-apt-repository ppa:gophers/go  # for lucid
 apt-get update
 apt-get install wget -y
+apt-get install git -y
+apt-get -y install git-core		# for lucid
 apt-get install python-software-properties python-setuptools libtool autoconf automake -y
+apt-get install build-essential curl libcurl4-openssl-dev apt-utils -y
 
 echo "=[golang]====================================================================================="
-wget https://storage.googleapis.com/golang/go1.4.linux-amd64.tar.gz
+wget https://storage.googleapis.com/golang/go1.4.linux-amd64.tar.gz --no-check-certificate
 tar -C /usr/local -xzf go1.4.linux-amd64.tar.gz
 rm go1.4.linux-amd64.tar.gz
 
