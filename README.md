@@ -1,4 +1,6 @@
 
+bash chroot.sh precise 1.0
+
 apt-get install dchroot
 apt-get install debootstrap
 

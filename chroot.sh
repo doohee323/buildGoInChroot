@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-cd ..
-
 export BASEDIR=`pwd`
-#BASEDIR="$BASEDIR/workspace"
 export UBUNTU_VERSION=$1
 export BUILD=$2
 
@@ -14,10 +11,9 @@ if [[ $# -eq 0 ]];
 fi
 
 echo "=[build $UBUNTU_VERSION in ~/chroot/$UBUNTU_VERSION]==============================================================="
+echo "BASEDIR: $BASEDIR"
 echo "UBUNTU_VERSION: $UBUNTU_VERSION"
 echo "BUILD: $BUILD"
-
-cd ~ 
 
 sudo umount ~/chroot/$UBUNTU_VERSION/proc
 sudo umount ~/chroot/$UBUNTU_VERSION/sys
@@ -35,7 +31,6 @@ sudo mount -o bind /sys ~/chroot/$UBUNTU_VERSION/sys
 #sudo mount -o bind /dev/shm ~/chroot/$UBUNTU_VERSION/dev/shm
 
 echo "=[copy hello]====================================================================================="
-sudo chown -Rf jenkins:jenkins ~/chroot
 echo "rm -Rf ~/chroot/$UBUNTU_VERSION/hello"
 sudo rm -Rf ~/chroot/$UBUNTU_VERSION/hello
 
@@ -43,8 +38,8 @@ sudo mkdir -p ~/chroot/$UBUNTU_VERSION/hello
 echo "sudo cp -Rf $BASEDIR/* ~/chroot/$UBUNTU_VERSION/hello"
 sudo cp -Rf $BASEDIR/* ~/chroot/$UBUNTU_VERSION/hello
 
-echo "sudo cp $BASEDIR/scripts/chroot_hello.sh ~/chroot/$UBUNTU_VERSION/hello"
-sudo cp $BASEDIR/scripts/chroot_hello.sh ~/chroot/$UBUNTU_VERSION/hello
+echo "sudo cp $BASEDIR/chroot_hello.sh ~/chroot/$UBUNTU_VERSION/hello"
+sudo cp $BASEDIR/chroot_hello.sh ~/chroot/$UBUNTU_VERSION/hello
 
 sudo chmod 777 ~/chroot/$UBUNTU_VERSION/hello/chroot_hello.sh
 

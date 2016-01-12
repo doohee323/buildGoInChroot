@@ -23,11 +23,6 @@ export BASEDIR=`pwd`
 export UBUNTU_VERSION=$1
 export BUILD=$2
 
-if [[ $# -eq 0 ]];
- then
- BUILD=`cat $BASEDIR/scripts/debian/VERSION`
-fi
-
 echo "= $BASEDIR ====================================================================================="
 echo "UBUNTU_VERSION: $UBUNTU_VERSION"
 echo "BUILD: $BUILD"
@@ -60,7 +55,7 @@ go get -u github.com/golang/glog
 cd $BASEDIR/src/hello
 
 #what .deb we want to build
-export BASE=hello$src
+export BASE=hello
 
 #test
 cd $BASEDIR/src/$BASE
@@ -78,12 +73,11 @@ mkdir -p $BASEDIR/builds/$BUILD/$BASE/var/hello
 mkdir -p $BASEDIR/builds/$BUILD/$BASE/etc/hello
 mkdir -p $BASEDIR/builds/$BUILD/$BASE/etc/init
 mkdir -p $BASEDIR/builds/$BUILD/$BASE/var/log/hello
-mkdir -p $BASEDIR/builds/$BUILD/$BASE/etc/monit/conf.d
 mkdir -p $BASEDIR/builds/$BUILD/$BASE/DEBIAN/
 
 echo "Package: $BASE" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/control
 echo "Architecture: amd64" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/control
-echo "Maintainer: Andrew Yasinsky" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/control
+echo "Maintainer: Doohee Hong" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/control
 echo "Depends: debconf (>= 0.5.00)" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/control
 echo "Priority: optional" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/control
 echo "Version: $BUILD" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/control
@@ -91,7 +85,6 @@ echo "Description: $BASE" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/control
  
 echo "/etc/hello/$BASE.cfg" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/conffiles
 echo "/etc/init/$BASE.conf" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/conffiles
-echo "/etc/monit/conf.d/$BASE" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/conffiles
 
 echo "set -e" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/preinst
 
@@ -99,7 +92,6 @@ echo "set -e" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/preinst
 cp $BASEDIR/bin/$BASE  $BASEDIR/builds/$BUILD/$BASE/var/hello/$BASE
 cp $BASEDIR/etc/hello/$BASE.cfg  $BASEDIR/builds/$BUILD/$BASE/etc/hello/$BASE.cfg
 cp $BASEDIR/etc/init/$BASE.conf  $BASEDIR/builds/$BUILD/$BASE/etc/init/$BASE.conf
-cp $BASEDIR/etc/monit/conf.d/$BASE  $BASEDIR/builds/$BUILD/$BASE/etc/monit/conf.d/$BASE
 
 chmod 775 $BASEDIR/builds/$BUILD/$BASE/DEBIAN/preinst
 
