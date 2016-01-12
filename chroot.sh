@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+export APP=hello
 export APP_DIR=`pwd`
 export UBUNTU_VERSION=$1
 export APP_VERSION=$2
