@@ -1,15 +1,5 @@
 #!/bin/bash
 
-#colors
-export red='\033[0;31m'
-export green='\033[0;32m'
-export NC='\033[0m' # No Color
-
-set -x 
-
-echo "=[build hello]====================================================================================="
-#gcc -v
-
 export PATH=/bin:/usr/bin:/usr/sbin:/usr/local/sbin:/usr/sbin:/sbin:.:
 locale-gen en_US.UTF-8
 dpkg-reconfigure locales
@@ -17,24 +7,26 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 alias ll='ls -a'
 
-cd /hello
-
-export BASEDIR=`pwd`
+export APP=hello
+export APP_DIR=`pwd`
 export UBUNTU_VERSION=$1
-export BUILD=$2
+export APP_VERSION=$2
 
-echo "= $BASEDIR ====================================================================================="
+echo "=[build $APP]====================================================================================="
+#gcc -v
+
+cd /$APP
+
+echo "= $APP_DIR ====================================================================================="
 echo "UBUNTU_VERSION: $UBUNTU_VERSION"
-echo "BUILD: $BUILD"
+echo "APP_VERSION: $APP_VERSION"
 
 export DEBIAN_FRONTEND=noninteractive 
 
 echo "=[apt-get update]====================================================================================="
 apt-get update
 apt-get install wget -y
-apt-get install git -y
 apt-get install python-software-properties python-setuptools libtool autoconf automake -y
-apt-get install build-essential curl libcurl4-openssl-dev apt-utils -y
 
 echo "=[golang]====================================================================================="
 wget https://storage.googleapis.com/golang/go1.4.linux-amd64.tar.gz
@@ -52,51 +44,48 @@ go get -u github.com/andelf/go-curl
 go get -u github.com/op/go-logging
 go get -u github.com/golang/glog
 
-cd $BASEDIR/src/hello
-
-#what .deb we want to build
-export BASE=hello
+cd $APP_DIR/src/$APP
 
 #test
-cd $BASEDIR/src/$BASE
+cd $APP_DIR/src/$APP
 #go test 
 
 #now we build
 echo "=[build]====================================================================================="
-echo go build -o $BASEDIR/bin/$BASE -ldflags "-X main.Build $BUILD" $BASEDIR/src/$BASE/$BASE.go
-go build -o $BASEDIR/bin/$BASE -ldflags "-X main.Build $BUILD" $BASEDIR/src/$BASE/$BASE.go 
+echo go build -o $APP_DIR/bin/$APP -ldflags "-X main.Build $APP_VERSION" $APP_DIR/src/$APP/$APP.go
+go build -o $APP_DIR/bin/$APP -ldflags "-X main.Build $APP_VERSION" $APP_DIR/src/$APP/$APP.go 
 
 #now we build .deb package
-rm -rf $BASEDIR/builds/$BUILD/$BASE
-mkdir -p $BASEDIR/builds/$BUILD/$BASE
-mkdir -p $BASEDIR/builds/$BUILD/$BASE/var/hello
-mkdir -p $BASEDIR/builds/$BUILD/$BASE/etc/hello
-mkdir -p $BASEDIR/builds/$BUILD/$BASE/etc/init
-mkdir -p $BASEDIR/builds/$BUILD/$BASE/var/log/hello
-mkdir -p $BASEDIR/builds/$BUILD/$BASE/DEBIAN/
+rm -rf $APP_DIR/builds/$APP_VERSION/$APP
+mkdir -p $APP_DIR/builds/$APP_VERSION/$APP
+mkdir -p $APP_DIR/builds/$APP_VERSION/$APP/var/$APP
+mkdir -p $APP_DIR/builds/$APP_VERSION/$APP/etc/$APP
+mkdir -p $APP_DIR/builds/$APP_VERSION/$APP/etc/init
+mkdir -p $APP_DIR/builds/$APP_VERSION/$APP/var/log/$APP
+mkdir -p $APP_DIR/builds/$APP_VERSION/$APP/DEBIAN/
 
-echo "Package: $BASE" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/control
-echo "Architecture: amd64" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/control
-echo "Maintainer: Doohee Hong" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/control
-echo "Depends: debconf (>= 0.5.00)" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/control
-echo "Priority: optional" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/control
-echo "Version: $BUILD" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/control
-echo "Description: $BASE" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/control
+echo "Package: $APP" >> $APP_DIR/builds/$APP_VERSION/$APP/DEBIAN/control
+echo "Architecture: amd64" >> $APP_DIR/builds/$APP_VERSION/$APP/DEBIAN/control
+echo "Maintainer: Doohee Hong" >> $APP_DIR/builds/$APP_VERSION/$APP/DEBIAN/control
+echo "Depends: debconf (>= 0.5.00)" >> $APP_DIR/builds/$APP_VERSION/$APP/DEBIAN/control
+echo "Priority: optional" >> $APP_DIR/builds/$APP_VERSION/$APP/DEBIAN/control
+echo "Version: $APP_VERSION" >> $APP_DIR/builds/$APP_VERSION/$APP/DEBIAN/control
+echo "Description: $APP" >> $APP_DIR/builds/$APP_VERSION/$APP/DEBIAN/control
  
-echo "/etc/hello/$BASE.cfg" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/conffiles
-echo "/etc/init/$BASE.conf" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/conffiles
+echo "/etc/$APP/$APP.cfg" >> $APP_DIR/builds/$APP_VERSION/$APP/DEBIAN/conffiles
+echo "/etc/init/$APP.conf" >> $APP_DIR/builds/$APP_VERSION/$APP/DEBIAN/conffiles
 
-echo "set -e" >> $BASEDIR/builds/$BUILD/$BASE/DEBIAN/preinst
+echo "set -e" >> $APP_DIR/builds/$APP_VERSION/$APP/DEBIAN/preinst
 
 #copy files where they need to be
-cp $BASEDIR/bin/$BASE  $BASEDIR/builds/$BUILD/$BASE/var/hello/$BASE
-cp $BASEDIR/etc/hello/$BASE.cfg  $BASEDIR/builds/$BUILD/$BASE/etc/hello/$BASE.cfg
-cp $BASEDIR/etc/init/$BASE.conf  $BASEDIR/builds/$BUILD/$BASE/etc/init/$BASE.conf
+cp $APP_DIR/bin/$APP  $APP_DIR/builds/$APP_VERSION/$APP/var/$APP/$APP
+cp $APP_DIR/etc/$APP/$APP.cfg  $APP_DIR/builds/$APP_VERSION/$APP/etc/$APP/$APP.cfg
+cp $APP_DIR/etc/init/$APP.conf  $APP_DIR/builds/$APP_VERSION/$APP/etc/init/$APP.conf
 
-chmod 775 $BASEDIR/builds/$BUILD/$BASE/DEBIAN/preinst
+chmod 775 $APP_DIR/builds/$APP_VERSION/$APP/DEBIAN/preinst
 
-dpkg-deb --build $BASEDIR/builds/$BUILD/$BASE
+dpkg-deb --build $APP_DIR/builds/$APP_VERSION/$APP
 
-ls -al $BASEDIR/builds/$BUILD
+ls -al $APP_DIR/builds/$APP_VERSION
 
 exit 0

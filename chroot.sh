@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-export BASEDIR=`pwd`
+export APP_DIR=`pwd`
 export UBUNTU_VERSION=$1
-export BUILD=$2
+export APP_VERSION=$2
 
 if [[ $# -eq 0 ]];
  then
  UBUNTU_VERSION="precise"
- BUILD="0.0.1"
+ APP_VERSION="0.0.1"
 fi
 
 echo "=[build $UBUNTU_VERSION in ~/chroot/$UBUNTU_VERSION]==============================================================="
-echo "BASEDIR: $BASEDIR"
+echo "APP_DIR: $APP_DIR"
 echo "UBUNTU_VERSION: $UBUNTU_VERSION"
-echo "BUILD: $BUILD"
+echo "APP_VERSION: $APP_VERSION"
 
 sudo umount ~/chroot/$UBUNTU_VERSION/proc
 sudo umount ~/chroot/$UBUNTU_VERSION/sys
@@ -30,24 +30,24 @@ sudo mount -o bind /sys ~/chroot/$UBUNTU_VERSION/sys
 #sudo mount -o bind /dev ~/chroot/$UBUNTU_VERSION/dev
 #sudo mount -o bind /dev/shm ~/chroot/$UBUNTU_VERSION/dev/shm
 
-echo "=[copy hello]====================================================================================="
-echo "rm -Rf ~/chroot/$UBUNTU_VERSION/hello"
-sudo rm -Rf ~/chroot/$UBUNTU_VERSION/hello
+echo "=[copy $APP]====================================================================================="
+echo "rm -Rf ~/chroot/$UBUNTU_VERSION/$APP"
+sudo rm -Rf ~/chroot/$UBUNTU_VERSION/$APP
 
-sudo mkdir -p ~/chroot/$UBUNTU_VERSION/hello
-echo "sudo cp -Rf $BASEDIR/* ~/chroot/$UBUNTU_VERSION/hello"
-sudo cp -Rf $BASEDIR/* ~/chroot/$UBUNTU_VERSION/hello
+sudo mkdir -p ~/chroot/$UBUNTU_VERSION/$APP
+echo "sudo cp -Rf $APP_DIR/* ~/chroot/$UBUNTU_VERSION/$APP"
+sudo cp -Rf $APP_DIR/* ~/chroot/$UBUNTU_VERSION/$APP
 
-echo "sudo cp $BASEDIR/chroot_hello.sh ~/chroot/$UBUNTU_VERSION/hello"
-sudo cp $BASEDIR/chroot_hello.sh ~/chroot/$UBUNTU_VERSION/hello
+echo "sudo cp $APP_DIR/chroot_$APP.sh ~/chroot/$UBUNTU_VERSION/$APP"
+sudo cp $APP_DIR/chroot_$APP.sh ~/chroot/$UBUNTU_VERSION/$APP
 
-sudo chmod 777 ~/chroot/$UBUNTU_VERSION/hello/chroot_hello.sh
+sudo chmod 777 ~/chroot/$UBUNTU_VERSION/$APP/chroot_$APP.sh
 
 sudo cp /etc/hosts ~/chroot/$UBUNTU_VERSION/etc/hosts
 sudo cp /etc/resolv.conf ~/chroot/$UBUNTU_VERSION/etc/resolv.conf
 
 echo "sudo chroot ~/chroot/$UBUNTU_VERSION"
-sudo chroot ~/chroot/$UBUNTU_VERSION /bin/bash -c "cd /hello; bash chroot_hello.sh $UBUNTU_VERSION $BUILD"
+sudo chroot ~/chroot/$UBUNTU_VERSION /bin/bash -c "cd /$APP; bash chroot_$APP.sh $UBUNTU_VERSION $APP_VERSION"
 
 exit 0
 
