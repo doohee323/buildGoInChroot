@@ -47,8 +47,22 @@ When you need to build golang app. in different ubuntu version, you can use chro
 ```
 	- install vagrant 4.3
 	https://www.virtualbox.org/wiki/Download_Old_Builds_4_3
-	cf. vagrant box add ubuntu/trusty64
-		vagrant box add lucid64 http://files.vagrantup.com/lucid64.box
+	- add lucid in vagrant
+	vagrant box add lucid64 http://files.vagrantup.com/lucid64.box
+	- run vm
+	vagrant up
+	vagrant@hello:/vagrant$ hello server
+	
+	- open another terminal and run hello with client argument.
+	vagrant ssh
+	vagrant@hello:/vagrant$ hello client
+	=> it works!
+	 
+	- but When you install hello_precise.deb in lucid, you'll get this error! 
+	dpkg -i hello_precise.deb
+	vagrant@hello:/vagrant$ hello server
+	=> hello: /lib/libc.so.6: version `GLIBC_2.14' not found (required by hello)
+	
 ```
 
 
