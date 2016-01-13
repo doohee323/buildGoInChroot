@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	zmq "github.com/alecthomas/gozmq"
 	logging "github.com/op/go-logging"
 	"os"
 	"syscall"
@@ -20,7 +21,11 @@ var (
 )
 
 func main() {
-	log.Info("=[PATH]===================================================================")
+	arg := "server"
+	if len(os.Args) > 1 {
+		arg = os.Args[1]
+	}
+	log.Info("=[%s\n]===================================================================", arg)
 
 	path := os.Getenv("GOPATH")
 	fmt.Println(path)
@@ -31,12 +36,35 @@ func main() {
 	syscall_path, ok := syscall.Getenv("_system_arch")
 	fmt.Println(syscall_path)
 	fmt.Println(ok)
-	
+
 	path = os.Getenv("_system_name")
 	fmt.Println(path)
-	
-	
-	
-	
-	
+
+	if arg == "server" || arg == "" {
+		log.Info("run server!")
+		context, _ := zmq.NewContext()
+		socket, _ := context.NewSocket(zmq.REP)
+		socket.Bind("tcp://127.0.0.1:5000")
+		socket.Bind("tcp://127.0.0.1:6000")
+
+		for {
+			msg, _ := socket.Recv(0)
+			println("Got", string(msg))
+			socket.Send(msg, 0)
+		}
+	} else if arg == "client" {
+		log.Info("client server!")
+		context, _ := zmq.NewContext()
+		socket, _ := context.NewSocket(zmq.REQ)
+		socket.Connect("tcp://127.0.0.1:5000")
+		socket.Connect("tcp://127.0.0.1:6000")
+
+		for i := 0; i < 10; i++ {
+			msg := fmt.Sprintf("msg %d", i)
+			socket.Send([]byte(msg), 0)
+			println("Sending", msg)
+			socket.Recv(0)
+		}
+	}
+
 }
