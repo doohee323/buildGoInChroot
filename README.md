@@ -43,5 +43,13 @@ When you need to build golang app. in different ubuntu version, you can use chro
 		- 2nd arg: want to build version
 ```
 
+# Verify in lucid
+```
+	- install vagrant 4.3
+	https://www.virtualbox.org/wiki/Download_Old_Builds_4_3
+	cf. vagrant box add ubuntu/trusty64
+		vagrant box add lucid64 http://files.vagrantup.com/lucid64.box
+```
+
 
 
