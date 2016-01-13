@@ -52,6 +52,8 @@ sudo chroot ~/chroot/$UBUNTU_VERSION /bin/bash -c "cd /$APP; bash chroot_$APP.sh
 echo "sudo chroot ~/chroot/$UBUNTU_VERSION"
 sudo chroot ~/chroot/$UBUNTU_VERSION
 
+cp ~/chroot/$UBUNTU_VERSION/$APP/builds/$APP_VERSION/$APP-$UBUNTU_VERSION-$APP_VERSION.deb .
+
 exit 0
 
 
