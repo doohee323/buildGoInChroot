@@ -47,8 +47,10 @@ sudo chmod 777 ~/chroot/$UBUNTU_VERSION/$APP/chroot_$APP.sh
 sudo cp /etc/hosts ~/chroot/$UBUNTU_VERSION/etc/hosts
 sudo cp /etc/resolv.conf ~/chroot/$UBUNTU_VERSION/etc/resolv.conf
 
-echo "sudo chroot ~/chroot/$UBUNTU_VERSION"
 sudo chroot ~/chroot/$UBUNTU_VERSION /bin/bash -c "cd /$APP; bash chroot_$APP.sh $UBUNTU_VERSION $APP_VERSION"
+
+echo "sudo chroot ~/chroot/$UBUNTU_VERSION"
+sudo chroot ~/chroot/$UBUNTU_VERSION
 
 exit 0
 
