@@ -1,6 +1,6 @@
 # BuildGoInChroot
 
-When you need to build Golang app. in different ubuntu version, you can use chroot. I made it for the usecase. It makes chroot environment and a builds debian file. And I made a lucid with vagrant, and installed below 3 ubuntu version debians in it. Since ZMQ library is needed for this app, only lucid debian can run in lucid VM.
+When you need to build Golang app. in different ubuntu version, you can use chroot. I made it for the usecase. It makes chroot environment and builds a debian file. And I made a lucid with vagrant, and installed below 3 ubuntu version debians in it. Since ZMQ library is needed for this app, only lucid debian can run in lucid VM.
 
 # Required
 ```
